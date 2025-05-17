@@ -32,7 +32,8 @@
         } 
         while (true);
     }
-    private static string LerSenhaComAsteriscos() 
+    private static string LerSenhaComAsteriscos()
+    //só pra mostrar a senha com asteriscos
     {
         string senha = "";
         ConsoleKeyInfo key;
@@ -58,6 +59,4 @@
         Console.WriteLine(); // Pula uma linha após digitar a senha
         return senha;
     }
-
-
 }
