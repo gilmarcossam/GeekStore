@@ -3,7 +3,7 @@
     public static string usuarioAdmin = "admin";
     public static string senhaAdmin = "admin123";
 
-    //Tela de inicio do sistema
+    //Tela de inicio do sistema Parte 1
     public static void FazerLogin() 
         {
         do
