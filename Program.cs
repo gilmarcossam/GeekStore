@@ -2,10 +2,7 @@
 {
     static void Main(string[] args)
     {
-        LoginService.FazerLogin();
+        Database.TestarConexao();  // ⬅️ A mensagem aparece AQUI!
+        LoginService.FazerLogin(); // Só roda depois do teste
     }
 }
-
-
-
-
