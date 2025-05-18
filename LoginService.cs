@@ -1,8 +1,9 @@
 ﻿static class LoginService
 {
-    public static string senhaAdmin = "admin123";
     public static string usuarioAdmin = "admin";
+    public static string senhaAdmin = "admin123";
 
+    //Tela de inicio do sistema
     public static void FazerLogin() 
         {
         do
