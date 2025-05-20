@@ -1,11 +1,16 @@
-﻿static class LoginService
+﻿using MySql.Data.MySqlClient;
+using System;
+
+public static class LoginService
 {
+    private static string connectionString = "Server=localhost;Database=sistema_usuarios;Uid=root;Pwd=255S@m255;";
+
+    // Credenciais do Admin Master (fixas)
     public static string usuarioAdmin = "admin";
     public static string senhaAdmin = "admin123";
 
-    //Tela de inicio do sistema Parte 1
-    public static void FazerLogin() 
-        {
+    public static void FazerLogin()
+    {
         do
         {
             Console.Clear();
@@ -17,11 +22,21 @@
             string senha = LerSenhaComAsteriscos();
             Console.WriteLine();
 
-            // Verifica se o usuário e a senha estão corretos
+            // Primeiro verifica se é o Admin Master
             if (usuario == usuarioAdmin && senha == senhaAdmin)
             {
-                Console.WriteLine("Login bem-sucedido!");
-                MenuService.MenuPrincipal();
+                Console.WriteLine("Login bem-sucedido como Admin Master!");
+                MenuService.MenuPrincipal(); // Menu específico para Admin Master
+                break;
+            }
+
+            // Se não for Admin Master, verifica no banco de dados
+            Usuario usuarioLogado = VerificarUsuarioNoBanco(usuario, senha);
+
+            if (usuarioLogado != null)
+            {
+                Console.WriteLine($"Login bem-sucedido como {usuarioLogado.TipoUsuario}!");
+                RedirecionarParaMenu(usuarioLogado.TipoUsuario);
                 break;
             }
             else
@@ -30,11 +45,74 @@
                 Console.WriteLine("Pressione qualquer tecla para continuar...");
                 Console.ReadKey();
             }
-        } 
+        }
         while (true);
     }
+
+    private static Usuario VerificarUsuarioNoBanco(string login, string senha)
+    {
+        try
+        {
+            using (var conexao = new MySqlConnection(connectionString))
+            {
+                conexao.Open();
+                var comando = new MySqlCommand(
+                    "SELECT id, login, senha_hash, tipo_usuario FROM usuarios WHERE login = @login",
+                    conexao);
+                comando.Parameters.AddWithValue("@login", login);
+
+                using (var reader = comando.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        string senhaHash = reader["senha_hash"].ToString();
+
+                        // Verifica se a senha está correta usando BCrypt
+                        if (BCrypt.Net.BCrypt.Verify(senha, senhaHash))
+                        {
+                            return new Usuario(
+                                Convert.ToInt32(reader["id"]),
+                                reader["login"].ToString(),
+                                reader["tipo_usuario"].ToString()
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao verificar usuário: {ex.Message}");
+        }
+        return null;
+    }
+
+    private static void RedirecionarParaMenu(string tipoUsuario)
+    {
+        switch (tipoUsuario)
+        {
+            case "Cliente":
+                MenuCliente.MenuPrincipal();
+                break;
+            case "Caixa":
+                MenuCaixa.MenuPrincipal();
+                break;
+            case "Estoquista":
+                MenuEstoquista.MenuPrincipal();
+                break;
+            case "Supervisor":
+                MenuSupervisor.MenuPrincipal();
+                break;
+            case "Financeiro":
+                MenuFinanceiro.MenuPrincipal();
+                break;
+            default:
+                Console.WriteLine("Tipo de usuário não reconhecido.");
+                break;
+        }
+    }
+
     private static string LerSenhaComAsteriscos()
-    //só pra mostrar a senha com asteriscos
     {
         string senha = "";
         ConsoleKeyInfo key;
@@ -43,7 +121,6 @@
         {
             key = Console.ReadKey(true);
 
-            // Ignora qualquer tecla que não seja caractere, Backspace ou Enter
             if (!char.IsControl(key.KeyChar))
             {
                 senha += key.KeyChar;
@@ -52,12 +129,27 @@
             else if (key.Key == ConsoleKey.Backspace && senha.Length > 0)
             {
                 senha = senha.Remove(senha.Length - 1);
-                Console.Write("\b \b"); // Remove o último asterisco
+                Console.Write("\b \b");
             }
         }
         while (key.Key != ConsoleKey.Enter);
 
-        Console.WriteLine(); // Pula uma linha após digitar a senha
+        Console.WriteLine();
         return senha;
+    }
+}
+
+// Classe auxiliar para representar o usuário
+public class Usuario
+{
+    public int Id { get; set; }
+    public string Login { get; set; }
+    public string TipoUsuario { get; set; }
+
+    public Usuario(int id, string login, string tipoUsuario)
+    {
+        Id = id;
+        Login = login;
+        TipoUsuario = tipoUsuario;
     }
 }
