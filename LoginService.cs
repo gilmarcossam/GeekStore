@@ -36,7 +36,7 @@ public static class LoginService
             if (usuarioLogado != null)
             {
                 Console.WriteLine($"Login bem-sucedido como {usuarioLogado.TipoUsuario}!");
-                RedirecionarParaMenu(usuarioLogado.TipoUsuario);
+                RedirecionarParaMenu(usuarioLogado);
                 break;
             }
             else
@@ -87,24 +87,24 @@ public static class LoginService
         return null;
     }
 
-    private static void RedirecionarParaMenu(string tipoUsuario)
+    private static void RedirecionarParaMenu(Usuario usuario)
     {
-        switch (tipoUsuario)
+        switch (usuario.TipoUsuario)
         {
             case "Cliente":
-                MenuCliente.MenuPrincipal();
+                MenuCliente.MenuPrincipal(usuario.Id);
                 break;
             case "Caixa":
-                MenuCaixa.MenuPrincipal();
+                MenuCaixa.MenuPrincipal(usuario.Id);
                 break;
             case "Estoquista":
-                MenuEstoquista.MenuPrincipal();
+                MenuEstoquista.MenuPrincipal(usuario.Id);
                 break;
             case "Supervisor":
-                MenuSupervisor.MenuPrincipal();
+                MenuSupervisor.MenuPrincipal(usuario.Id);
                 break;
             case "Financeiro":
-                MenuFinanceiro.MenuPrincipal();
+                MenuFinanceiro.MenuPrincipal(usuario.Id);
                 break;
             default:
                 Console.WriteLine("Tipo de usuário não reconhecido.");

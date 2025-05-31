@@ -1,6 +1,6 @@
 ﻿public static class MenuCaixa
 {
-    public static void MenuPrincipal()
+    public static void MenuPrincipal(int usuarioId)
     {
         {
             bool continuar = true;
@@ -18,10 +18,7 @@
 Escolha uma opção:
 1. Realizar Venda
 2. Cadastrar um Cliente
-3. Consultar um Produto
-4. Cancelar uma Venda
-5. Fechar Caixa
-6. Voltar/Sair
+3. Sair
 ");
 
                 string opcao = Console.ReadLine()!;
@@ -29,17 +26,13 @@ Escolha uma opção:
                 switch (opcao)
                 {
                     case "1":
-                        //CadastroUser.CadastrarUsuario();
+                        VendaService.RealizarVenda(usuarioId);
                         break;
                     case "2":
                         CadastroCliente.Cadastrar();
                         break;
                     case "3":
-                        Console.WriteLine("Alteração de Admin seria feita aqui.");
-                        Console.ReadLine();
-                        break;
-                    case "6":
-                        MenuService.MenuPrincipal();
+                        Environment.Exit(0);
                         break;
                     default:
                         Console.WriteLine("Opção inválida. Tente novamente.");

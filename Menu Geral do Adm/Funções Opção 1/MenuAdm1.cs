@@ -15,7 +15,7 @@
 
             Console.WriteLine(@"
 Escolha uma opção:
-1. Casdastrar novo Usuário
+1. Cadastrar novo Usuário
 2. Alterar Usuário
 3. Excluir Usuário
 4. Voltar/Sair

@@ -1,6 +1,6 @@
 ﻿public static class MenuEstoquista
 {
-    public static void MenuPrincipal()
+    public static void MenuPrincipal(int usuarioId)
     {
         {
             bool continuar = true;
@@ -32,18 +32,19 @@ Escolha uma opção:
                         CadastroProduto.CadastrarNovoProduto();
                         break;
                     case "2":
-                        //CadastroCliente.Cadastrar();
+                        ExcluirProduto.Excluir();
                         break;
                     case "3":
-                        Console.WriteLine("Alteração de Admin seria feita aqui.");
-                        Console.ReadLine();
+                        ListarProdutos.Listar();
+                        break;
+                    case "4":
+                        AlterarProduto.Alterar();
+                        break;
+                    case "5":
+                        ConsultarProduto.Consultar();
                         break;
                     case "6":
-                        MenuService.MenuPrincipal();
-                        break;
-                    default:
-                        Console.WriteLine("Opção inválida. Tente novamente.");
-                        Console.ReadLine();
+                       Environment.Exit(0);
                         break;
                 }
             }
